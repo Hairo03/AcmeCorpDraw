@@ -1,0 +1,52 @@
+﻿using AcmeCorpDraw.Domain.DTOs;
+using AcmeCorpDraw.Domain.Interfaces;
+using AcmeCorpDraw.Domain.Models;
+
+namespace AcmeCorpDraw.WebApp.Services
+{
+    public class SubmissionService : ISubmissionService
+    {
+        private readonly ISubmissionRepository _submissionRepository;
+        private readonly ISerialNumberRepository _serialNumberRepository;
+        private const int MaxEntriesPerSerial = 2;
+
+        public SubmissionService(ISubmissionRepository submissionRepository, ISerialNumberRepository serialNumberRepository)
+        {
+            _submissionRepository = submissionRepository;
+            _serialNumberRepository = serialNumberRepository;
+        }
+
+        public async Task<(bool Success, string? ErrorMessage, Submission? Submission)> CreateSubmissionAsync(SubmissionDTO dto)
+        {
+            if (await _serialNumberRepository.IsValidAsync(dto.SerialNumber) == false)
+            {
+                return (false, "Invalid serial number.", null);
+            }
+
+            var existingCount = await _submissionRepository.CountBySerialAsync(dto.SerialNumber);
+            if (existingCount >= MaxEntriesPerSerial)
+            {
+                return (false, "Maximum entries for this serial number reached.", null);
+            }
+
+            var submission = new Submission
+            {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                SerialNumber = dto.SerialNumber,
+                DateOfBirth = dto.DateOfBirth,
+                SubmittedAt = DateTime.UtcNow
+            };
+
+            await _submissionRepository.AddSubmissionAsync(submission);
+
+            return (true, null, submission);
+        }
+
+        public async Task<IEnumerable<Submission>> GetAllSubmissionsAsync()
+        {
+            return await _submissionRepository.GetAllAsync();
+        }
+    }
+}

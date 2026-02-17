@@ -1,5 +1,8 @@
+using AcmeCorpDraw.Domain.Interfaces;
 using AcmeCorpDraw.WebApp.Components;
 using AcmeCorpDraw.WebApp.Data;
+using AcmeCorpDraw.WebApp.Repositories;
+using AcmeCorpDraw.WebApp.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +18,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
         + "'DefaultConnection' not found.");
 
 // Register the DbContext with the connection string.
-builder.Services.AddDbContext<AcmeDbContext>(options => options.UseSqlServer());
+builder.Services.AddDbContext<AcmeDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
+builder.Services.AddScoped<ISerialNumberRepository, SerialNumberRepository>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 
 var app = builder.Build();
 
