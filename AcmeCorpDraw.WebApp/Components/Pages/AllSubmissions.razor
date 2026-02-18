@@ -1,6 +1,43 @@
 ﻿@page "/all-submissions"
-<h3>All Submissions</h3>
+@inject ISubmissionService SubmissionService
+
+
+<div class="container">
+    <h3>All Submissions</h3>
+    <table class="table mb-5">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Email</th>
+                <th scope="col">Serial Number</th>
+                <th scope="col">Submitted at</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var (index, submission) in allSubmissions.Select((submission, index) => (index, submission)))
+            {
+                <tr>
+                    <td>@(index + 1)</td>
+                    <td>@submission.FirstName</td>
+                    <td>@submission.LastName</td>
+                    <td>@submission.Email</td>
+                    <td>@submission.SerialNumber</td>
+                    <td>@submission.SubmittedAt</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
 
 @code {
+    public List<Submission> allSubmissions { get; set; } = new List<Submission>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        allSubmissions = (await SubmissionService.GetAllSubmissionsAsync()).ToList();
+    }
 }
