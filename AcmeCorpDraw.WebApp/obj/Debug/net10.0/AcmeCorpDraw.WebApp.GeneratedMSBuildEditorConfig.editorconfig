@@ -66,9 +66,9 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-8x5ufrfiu5
 
-[C:/Users/theha/source/repos/AcmeCorpDraw/AcmeCorpDraw.WebApp/Components/Layout/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-jjsjb3kpg7
+[C:/Users/theha/source/repos/AcmeCorpDraw/AcmeCorpDraw.WebApp/Components/Layout/NavBar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2QmFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-my42wiaap6
 
 [C:/Users/theha/source/repos/AcmeCorpDraw/AcmeCorpDraw.WebApp/Components/Layout/ReconnectModal.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcUmVjb25uZWN0TW9kYWwucmF6b3I=

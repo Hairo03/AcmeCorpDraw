@@ -4,12 +4,11 @@
 
 <PageTitle>Enter the Draw - Acme Corporation</PageTitle>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
+<div class="container my-5">
+    <div class="d-flex flex-row justify-content-center">
         <div class="col-md-8">
             <h1 class="mb-4">Acme Corporation Prize Draw</h1>
-            <p class="lead">Enter for a chance to win! You can enter twice per valid serial number.</p>
-            <p class="text-muted">Must be 18 years or older to enter.</p>
+            <p>Enter for a chance to win! You can enter twice per valid serial number.</p>
 
             @if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -25,81 +24,94 @@
                     <h4 class="alert-heading">Success!</h4>
                     <p>Your entry has been submitted successfully. Good luck!</p>
                     <hr>
-                    <p class="mb-0">You can enter again with the same serial number (maximum 2 entries per serial).</p>
-                    <button type="button" class="btn-close" @onclick="ResetForm"></button>
+                    @if (entriesUsedForSerial < 2)
+                    {
+                        <p class="mb-0">
+                            <strong>Entries for this serial: @entriesUsedForSerial of 2</strong><br/>
+                            You can submit one more entry with serial number <strong>@lastSubmittedSerial</strong>.
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="mb-0">
+                            <strong>Maximum entries reached: 2 of 2</strong><br/>
+                            You've used both entries for serial number <strong>@lastSubmittedSerial</strong>.
+                        </p>
+                    }
+                    <button type="button" class="btn-close" @onclick="DismissSuccessMessage"></button>
                 </div>
             }
 
-            @if (!submissionSuccess)
-            {
-                <EditForm Model="@submissionDto" OnValidSubmit="@HandleValidSubmit" FormName="SubmissionForm">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary class="alert alert-warning" />
+            <EditForm Model="@submissionDto" OnValidSubmit="@HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert alert-warning" />
 
-                    <div class="mb-3">
-                        <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
-                        <InputText id="firstName" @bind-Value="submissionDto.FirstName" class="form-control" placeholder="Enter your first name" />
-                        <ValidationMessage For="@(() => submissionDto.FirstName)" class="text-danger" />
-                    </div>
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+                    <InputText id="firstName" @bind-Value="submissionDto.FirstName" class="form-control" placeholder="Enter your first name" />
+                    <ValidationMessage For="() => submissionDto.FirstName" class="text-danger" />
+                </div>
 
-                    <div class="mb-3">
-                        <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
-                        <InputText id="lastName" @bind-Value="submissionDto.LastName" class="form-control" placeholder="Enter your last name" />
-                        <ValidationMessage For="@(() => submissionDto.LastName)" class="text-danger" />
-                    </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                    <InputText id="lastName" @bind-Value="submissionDto.LastName" class="form-control" placeholder="Enter your last name" />
+                    <ValidationMessage For="() => submissionDto.LastName" class="text-danger" />
+                </div>
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
-                        <InputText id="email" type="email" @bind-Value="submissionDto.Email" class="form-control" placeholder="your.email@example.com" />
-                        <ValidationMessage For="@(() => submissionDto.Email)" class="text-danger" />
-                    </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                    <InputText id="email" type="email" @bind-Value="submissionDto.Email" class="form-control" placeholder="your.email@example.com" />
+                    <ValidationMessage For="() => submissionDto.Email" class="text-danger" />
+                </div>
 
-                    <div class="mb-3">
-                        <label for="serialNumber" class="form-label">Product Serial Number <span class="text-danger">*</span></label>
-                        <InputText id="serialNumber" @bind-Value="submissionDto.SerialNumber" class="form-control" placeholder="ACME-XXXX-XXXX-XXXX" />
-                        <div class="form-text">Enter the serial number from your Acme Corporation product</div>
-                        <ValidationMessage For="@(() => submissionDto.SerialNumber)" class="text-danger" />
-                    </div>
+                <div class="mb-3">
+                    <label for="serialNumber" class="form-label">Product Serial Number <span class="text-danger">*</span></label>
+                    <InputText id="serialNumber" @bind-Value="submissionDto.SerialNumber" class="form-control" placeholder="ACME-XXXX-XXXX-XXXX" />
+                    <div class="form-text">Enter the serial number from your Acme Corporation product</div>
+                    <ValidationMessage For="() => submissionDto.SerialNumber" class="text-danger" />
+                </div>
 
-                    <div class="mb-3">
-                        <label for="dateOfBirth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                        <InputDate id="dateOfBirth" @bind-Value="submissionDto.DateOfBirth" class="form-control" />
-                        <div class="form-text">You must be at least 18 years old to enter</div>
-                        <ValidationMessage For="@(() => submissionDto.DateOfBirth)" class="text-danger" />
-                    </div>
+                <div class="mb-3">
+                    <label for="dateOfBirth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                    <InputDate id="dateOfBirth" @bind-Value="submissionDto.DateOfBirth" class="form-control" />
+                    <div class="form-text">You must be at least 18 years old to enter</div>
+                    <ValidationMessage For="() => submissionDto.DateOfBirth" class="text-danger" />
+                </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg" disabled="@isSubmitting">
-                            @if (isSubmitting)
-                            {
-                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                <span>Submitting...</span>
-                            }
-                            else
-                            {
-                                <span>Submit Entry</span>
-                            }
-                        </button>
-                    </div>
-
-                    <div class="mt-3 text-center">
-                        <small class="text-muted"><span class="text-danger">*</span> Required fields</small>
-                    </div>
-                </EditForm>
-            }
+                <div class="d-flex flex-row gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg w-100" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span>Submitting...</span>
+                        }
+                        else
+                        {
+                            <span>Submit Entry</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
         </div>
     </div>
 </div>
 
 @code {
-    private SubmissionDTO submissionDto = new();
+    private SubmissionDTO submissionDto { get; set; } = new SubmissionDTO();
+
     private bool isSubmitting = false;
     private bool submissionSuccess = false;
     private string? errorMessage;
+    private int entriesUsedForSerial = 0;
+    private string? lastSubmittedSerial;
 
     private async Task HandleValidSubmit()
     {
-        // Loading state
+        if (isSubmitting)
+        {
+            return; // Prevent multiple submissions
+        };
+
         isSubmitting = true;
         errorMessage = null;
 
@@ -107,19 +119,21 @@
         {
             var (success, error, submission) = await SubmissionService.CreateSubmissionAsync(submissionDto);
 
-            if (success)
+            if (success && submission != null)
             {
                 submissionSuccess = true;
+                lastSubmittedSerial = submissionDto.SerialNumber;
+
+                entriesUsedForSerial = await SubmissionService.GetSubmissionCountBySerialAsync(submissionDto.SerialNumber);
             }
             else
             {
                 errorMessage = error;
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "An unexpected error occurred. Please try again.";
-            // TODO: Log exception
         }
         finally
         {
@@ -127,10 +141,17 @@
         }
     }
 
+    private void DismissSuccessMessage()
+    {
+        submissionSuccess = false;
+    }
+
     private void ResetForm()
     {
         submissionDto = new SubmissionDTO();
         submissionSuccess = false;
         errorMessage = null;
+        entriesUsedForSerial = 0;
+        lastSubmittedSerial = null;
     }
 }

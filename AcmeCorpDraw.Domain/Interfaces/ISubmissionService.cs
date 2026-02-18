@@ -11,5 +11,7 @@ namespace AcmeCorpDraw.Domain.Interfaces
         // Returns a tuple so it's easier to handle success/failure
         Task<(bool Success, string? ErrorMessage, Submission? Submission)> CreateSubmissionAsync(SubmissionDTO dto);
         Task<IEnumerable<Submission>> GetAllSubmissionsAsync();
+
+        Task<int> GetSubmissionCountBySerialAsync(string serialNumber);
     }
 }

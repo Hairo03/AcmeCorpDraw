@@ -48,5 +48,10 @@ namespace AcmeCorpDraw.WebApp.Services
         {
             return await _submissionRepository.GetAllAsync();
         }
+
+        public async Task<int> GetSubmissionCountBySerialAsync(string serialNumber)
+        {
+            return await _submissionRepository.CountBySerialAsync(serialNumber);
+        }
     }
 }
