@@ -24,7 +24,7 @@ namespace AcmeCorpDraw.WebApp.Repositories
         public async Task<IEnumerable<Submission>> GetAllAsync()
         {
             return await _context.Submissions
-                .OrderBy(s => s.SubmittedAt)
+                .OrderByDescending(s => s.SubmittedAt)
                 .ToListAsync();
         }
 

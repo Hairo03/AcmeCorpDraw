@@ -31,10 +31,10 @@ namespace AcmeCorpDraw.WebApp.Services
 
             var submission = new Submission
             {
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Email = dto.Email,
-                SerialNumber = dto.SerialNumber,
+                FirstName = dto.FirstName.Trim(),
+                LastName = dto.LastName.Trim(),
+                Email = dto.Email.Trim(),
+                SerialNumber = dto.SerialNumber.Trim().ToUpperInvariant(),
                 DateOfBirth = dto.DateOfBirth,
                 SubmittedAt = DateTime.UtcNow
             };

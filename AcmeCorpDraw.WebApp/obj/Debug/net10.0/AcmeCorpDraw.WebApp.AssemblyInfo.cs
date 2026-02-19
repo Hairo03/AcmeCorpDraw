@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AcmeCorpDraw.WebApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+47ca2fbeba531c444b0cf28e822b49c0b8f6035d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d55b9967e9ebe0e4e18c7dcdc5d944441cce783")]
 [assembly: System.Reflection.AssemblyProductAttribute("AcmeCorpDraw.WebApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AcmeCorpDraw.WebApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
