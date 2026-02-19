@@ -1,5 +1,6 @@
 ﻿@page "/"
-@inject ISubmissionService SubmissionService
+@inject HttpClient Http
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <PageTitle>Enter the Draw - Acme Corporation</PageTitle>
@@ -110,26 +111,43 @@
         if (isSubmitting)
         {
             return; // Prevent multiple submissions
-        };
+        }
 
         isSubmitting = true;
         errorMessage = null;
 
         try
         {
-            var (success, error, submission) = await SubmissionService.CreateSubmissionAsync(submissionDto);
+            var baseUrl = Navigation.BaseUri;
+            var apiUrl = $"{baseUrl}api/submissions";
 
-            if (success && submission != null)
+            var response = await Http.PostAsJsonAsync(apiUrl, submissionDto);
+
+            if (response.IsSuccessStatusCode)
             {
-                submissionSuccess = true;
-                lastSubmittedSerial = submissionDto.SerialNumber;
+                var result = await response.Content.ReadFromJsonAsync<Response>();
 
-                entriesUsedForSerial = await SubmissionService.GetSubmissionCountBySerialAsync(submissionDto.SerialNumber);
+                if (result?.Success == true && result.Submission != null)
+                {
+                    submissionSuccess = true;
+                    lastSubmittedSerial = submissionDto.SerialNumber;
+
+                    var countResponse = await Http.GetAsync($"{baseUrl}api/submissions/count/{submissionDto.SerialNumber}");
+                    if (countResponse.IsSuccessStatusCode)
+                    {
+                        entriesUsedForSerial = await countResponse.Content.ReadFromJsonAsync<int>();
+                    }
+                }
             }
             else
             {
-                errorMessage = error;
+                var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                errorMessage = errorResponse?.Error ?? "An error occurred while submitting your entry.";
             }
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Unable to connect to the server. Please try again.";
         }
         catch (Exception)
         {
@@ -153,5 +171,17 @@
         errorMessage = null;
         entriesUsedForSerial = 0;
         lastSubmittedSerial = null;
+    }
+
+    private class Response
+    {
+        public bool Success { get; set; }
+        public Submission? Submission { get; set; }
+        public string? ErrorMessage { get; set; }
+    }
+
+    private class ErrorResponse
+    {
+        public string? Error { get; set; }
     }
 }

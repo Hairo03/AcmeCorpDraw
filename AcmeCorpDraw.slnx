@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="AcmeCorpDraw.Domain/AcmeCorpDraw.Domain.csproj" />
+  <Project Path="AcmeCorpDraw.Tests/AcmeCorpDraw.Tests.csproj" Id="40a73cd2-67c1-47d3-bc35-3b5239b7f797" />
   <Project Path="AcmeCorpDraw.WebApp/AcmeCorpDraw.WebApp.csproj" />
 </Solution>

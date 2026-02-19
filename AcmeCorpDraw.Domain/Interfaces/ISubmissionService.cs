@@ -13,5 +13,7 @@ namespace AcmeCorpDraw.Domain.Interfaces
         Task<IEnumerable<Submission>> GetAllSubmissionsAsync();
 
         Task<int> GetSubmissionCountBySerialAsync(string serialNumber);
+
+        Task<Submission> GetSubmissionByIdAsync(int id);
     }
 }

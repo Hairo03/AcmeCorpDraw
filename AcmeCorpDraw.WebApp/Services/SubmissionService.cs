@@ -39,7 +39,7 @@ namespace AcmeCorpDraw.WebApp.Services
                 SubmittedAt = DateTime.UtcNow
             };
 
-            await _submissionRepository.AddSubmissionAsync(submission);
+            await _submissionRepository.AddAsync(submission);
 
             return (true, null, submission);
         }
@@ -52,6 +52,11 @@ namespace AcmeCorpDraw.WebApp.Services
         public async Task<int> GetSubmissionCountBySerialAsync(string serialNumber)
         {
             return await _submissionRepository.CountBySerialAsync(serialNumber);
+        }
+
+        public async Task<Submission> GetSubmissionByIdAsync(int id)
+        {
+            return await _submissionRepository.GetByIdAsync(id);
         }
     }
 }

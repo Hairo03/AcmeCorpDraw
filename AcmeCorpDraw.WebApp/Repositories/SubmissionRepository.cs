@@ -15,7 +15,7 @@ namespace AcmeCorpDraw.WebApp.Repositories
             _context = context;
         }
 
-        public async Task AddSubmissionAsync(Submission submission)
+        public async Task AddAsync(Submission submission)
         {
             _context.Submissions.Add(submission);
             await _context.SaveChangesAsync();
@@ -24,7 +24,7 @@ namespace AcmeCorpDraw.WebApp.Repositories
         public async Task<IEnumerable<Submission>> GetAllAsync()
         {
             return await _context.Submissions
-                .OrderByDescending(s => s.SubmittedAt)
+                .OrderBy(s => s.SubmittedAt)
                 .ToListAsync();
         }
 
@@ -32,6 +32,11 @@ namespace AcmeCorpDraw.WebApp.Repositories
         {
             return await _context.Submissions
                 .CountAsync(s => s.SerialNumber == serialNumber.ToUpperInvariant());
+        }
+
+        public async Task<Submission> GetByIdAsync(int id)
+        {
+            return await _context.Submissions.FindAsync(id);
         }
     }
 }

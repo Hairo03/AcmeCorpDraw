@@ -7,8 +7,9 @@ namespace AcmeCorpDraw.Domain.Interfaces
 {
     public interface ISubmissionRepository
     {
-        Task AddSubmissionAsync(Submission submission);
+        Task AddAsync(Submission submission);
         Task<IEnumerable<Submission>> GetAllAsync();
         Task<int> CountBySerialAsync(string serialNumber);
+        Task<Submission> GetByIdAsync(int id);
     }
 }
