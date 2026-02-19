@@ -1,57 +1,123 @@
 ﻿@page "/all-submissions"
+@page "/all-submissions/{PageNumber:int}"
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<div class="container">
+<div class="container d-flex flex-column" style="min-height: calc(100vh - 5.5rem);">
     <h3>All Submissions</h3>
-    @if (allSubmissions == null)
+    @if (isLoading)
     {
-        <div class="text-center">
+        <div class="text-center flex-grow-1 d-flex align-items-center justify-content-center">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
     }
+    else if (currentPageSubmissions == null || currentPageSubmissions.Count == 0)
+    {
+        <div class="flex-grow-1">
+            <p>No submissions found.</p>
+        </div>
+    }
     else
     {
-        <table class="table mb-5">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Serial Number</th>
-                    <th scope="col">Submitted at</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var (index, submission) in allSubmissions.Select((submission, index) => (index, submission)))
-                {
+        <div class="flex-grow-1">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@(index + 1)</td>
-                        <td>@submission.FirstName</td>
-                        <td>@submission.LastName</td>
-                        <td>@submission.Email</td>
-                        <td>@submission.SerialNumber</td>
-                        <td>@submission.SubmittedAt.ToString("g")</td>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Serial Number</th>
+                        <th scope="col">Submitted at</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var (index, submission) in currentPageSubmissions.Select((submission, index) => (index, submission)))
+                    {
+                        <tr>
+                            <td>@((PageNumber - 1) * itemsPerPage + index + 1)</td>
+                            <td>@submission.FirstName</td>
+                            <td>@submission.LastName</td>
+                            <td>@submission.Email</td>
+                            <td>@submission.SerialNumber</td>
+                            <td>@submission.SubmittedAt.ToString("g")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-auto mb-3">
+            <PaginationBar PageAmount="totalPages" CurrentPage="PageNumber" OnPageChanged="HandlePageChanged" />
+        </div>
     }
 </div>
 
 
-
 @code {
-    private List<Submission>? allSubmissions;
+    [Parameter]
+    public int PageNumber { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private List<Submission>? currentPageSubmissions;
+    private int totalPages;
+    private int totalRecords;
+    private const int itemsPerPage = 10;
+    private bool isLoading = true;
+
+    protected override void OnInitialized()
     {
-        string baseUrl = Navigation.BaseUri;
-        string apiUrl = $"{baseUrl}api/submissions";
-        allSubmissions = await Http.GetFromJsonAsync<List<Submission>>(apiUrl);
+        if (PageNumber < 1)
+        {
+            PageNumber = 1;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (PageNumber < 1)
+        {
+            PageNumber = 1;
+        }
+        
+        await LoadPageAsync();
+    }
+
+    private async Task LoadPageAsync()
+    {
+        isLoading = true;
+        try
+        {
+            string baseUrl = Navigation.BaseUri;
+            
+            string countUrl = $"{baseUrl}api/submissions/count";
+            totalRecords = await Http.GetFromJsonAsync<int>(countUrl);
+            totalPages = (int)Math.Ceiling(totalRecords / (double)itemsPerPage);
+            
+            if (totalRecords > 0)
+            {
+                string pageUrl = $"{baseUrl}api/submissions/page/{PageNumber}";
+                currentPageSubmissions = await Http.GetFromJsonAsync<List<Submission>>(pageUrl);
+            }
+            else
+            {
+                currentPageSubmissions = new List<Submission>();
+            }
+        }
+        catch (HttpRequestException)
+        {
+            currentPageSubmissions = new List<Submission>();
+            totalPages = 0;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void HandlePageChanged(int newPage)
+    {
+        Navigation.NavigateTo($"/all-submissions/{newPage}");
     }
 }

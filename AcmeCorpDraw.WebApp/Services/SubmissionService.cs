@@ -49,6 +49,11 @@ namespace AcmeCorpDraw.WebApp.Services
             return await _submissionRepository.GetAllAsync();
         }
 
+        public async Task<IEnumerable<Submission>> GetSubmissionsPageAsync(int pageNumber, int pageSize)
+        {
+            return await _submissionRepository.GetPageAsync(pageNumber, pageSize);
+        }
+
         public async Task<int> GetSubmissionCountBySerialAsync(string serialNumber)
         {
             return await _submissionRepository.CountBySerialAsync(serialNumber);
@@ -57,6 +62,11 @@ namespace AcmeCorpDraw.WebApp.Services
         public async Task<Submission> GetSubmissionByIdAsync(int id)
         {
             return await _submissionRepository.GetByIdAsync(id);
+        }
+
+        public async Task<int> GetSubmissionCountAsync()
+        {
+            return await _submissionRepository.GetCountAsync();
         }
     }
 }

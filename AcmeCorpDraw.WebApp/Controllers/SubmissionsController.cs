@@ -1,5 +1,6 @@
 using AcmeCorpDraw.Domain.DTOs;
 using AcmeCorpDraw.Domain.Interfaces;
+using AcmeCorpDraw.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AcmeCorpDraw.WebApp.Controllers;
@@ -9,6 +10,7 @@ namespace AcmeCorpDraw.WebApp.Controllers;
 public class SubmissionsController : ControllerBase
 {
     private readonly ISubmissionService _submissionService;
+    private const int PAGESIZE = 10;
 
     public SubmissionsController(ISubmissionService submissionService)
     {
@@ -18,14 +20,26 @@ public class SubmissionsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var submissions = await _submissionService.GetAllSubmissionsAsync();
+        IEnumerable<Submission> submissions = await _submissionService.GetAllSubmissionsAsync();
         return Ok(submissions);
+    }
+
+    [HttpGet("page/{pageNumber}")]
+    public async Task<IActionResult> GetPage(int pageNumber)
+    {
+        IEnumerable<Submission> submissions = await _submissionService.GetAllSubmissionsAsync();
+        
+        IEnumerable<Submission> pagedResult = submissions
+            .Skip((pageNumber - 1) * PAGESIZE)
+            .Take(PAGESIZE);
+
+        return Ok(pagedResult);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var submission = await _submissionService.GetSubmissionByIdAsync(id);
+        Submission submission = await _submissionService.GetSubmissionByIdAsync(id);
         return submission != null ? Ok(submission) : NotFound(new { error = "Submission not found." });
     }
 
@@ -45,10 +59,17 @@ public class SubmissionsController : ControllerBase
             new { success = result.Success, submission = result.Submission, errorMessage = result.ErrorMessage });
     }
 
+    [HttpGet("count")]
+    public async Task<IActionResult> GetCount()
+    {
+        int count = await _submissionService.GetSubmissionCountAsync();
+        return Ok(count);
+    }
+
     [HttpGet("count/{serialNumber}")]
     public async Task<IActionResult> CountBySerial(string serialNumber)
     {
-        var count = await _submissionService.GetSubmissionCountBySerialAsync(serialNumber);
+        int count = await _submissionService.GetSubmissionCountBySerialAsync(serialNumber);
         return Ok(count);
     }
 }

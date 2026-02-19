@@ -34,9 +34,24 @@ namespace AcmeCorpDraw.WebApp.Repositories
                 .CountAsync(s => s.SerialNumber == serialNumber.ToUpperInvariant());
         }
 
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Submissions.CountAsync();
+        }
+
         public async Task<Submission> GetByIdAsync(int id)
         {
             return await _context.Submissions.FindAsync(id);
+        }
+
+        public Task<IEnumerable<Submission>> GetPageAsync(int pageNumber, int pageSize)
+        {
+            return _context.Submissions
+                .OrderByDescending(s => s.SubmittedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync()
+                .ContinueWith(t => t.Result.AsEnumerable());
         }
     }
 }
