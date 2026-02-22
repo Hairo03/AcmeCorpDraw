@@ -9,7 +9,9 @@ namespace AcmeCorpDraw.Domain.Interfaces
     {
         Task AddAsync(Submission submission);
         Task<IEnumerable<Submission>> GetAllAsync();
+        Task<IEnumerable<Submission>> GetPageAsync(int pageNumber, int pageSize);
         Task<int> CountBySerialAsync(string serialNumber);
+        Task<int> GetCountAsync(); 
         Task<Submission> GetByIdAsync(int id);
     }
 }
