@@ -6,7 +6,7 @@ A Blazor Server web application for managing prize draw submissions with serial 
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (or SQL Server)
-- Visual Studio 2022 or later (recommended) or VS Code
+- Visual Studio 2026
 
 ## Getting Started
 
