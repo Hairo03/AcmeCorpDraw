@@ -78,6 +78,7 @@ Open your browser and navigate to the URL displayed in the console.
 
 ## Sample Serial Numbers
 
+All valid serial numbers can be found in the serial-numbers.txt file.
 Here are 10 examples from the 100 pre-seeded serial numbers you can use for testing:
 
 1. `ACME-0JIE-XYX2-N0AT`
