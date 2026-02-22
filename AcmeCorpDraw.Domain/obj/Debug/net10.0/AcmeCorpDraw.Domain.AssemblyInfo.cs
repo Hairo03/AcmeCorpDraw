@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AcmeCorpDraw.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf34f4d889679dcf8ceb5ea8e953c324d37827e3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+db533125a0971015a83149f149e9ad43c441c8a2")]
 [assembly: System.Reflection.AssemblyProductAttribute("AcmeCorpDraw.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AcmeCorpDraw.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

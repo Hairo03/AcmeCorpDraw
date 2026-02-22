@@ -27,13 +27,9 @@ public class SubmissionsController : ControllerBase
     [HttpGet("page/{pageNumber}")]
     public async Task<IActionResult> GetPage(int pageNumber)
     {
-        IEnumerable<Submission> submissions = await _submissionService.GetAllSubmissionsAsync();
-        
-        IEnumerable<Submission> pagedResult = submissions
-            .Skip((pageNumber - 1) * PAGESIZE)
-            .Take(PAGESIZE);
+        IEnumerable<Submission> pagedSubmissions = await _submissionService.GetSubmissionsPageAsync(pageNumber, PAGESIZE);
 
-        return Ok(pagedResult);
+        return Ok(pagedSubmissions);
     }
 
     [HttpGet("{id}")]
