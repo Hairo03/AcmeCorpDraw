@@ -66,21 +66,13 @@
     private const int itemsPerPage = 10;
     private bool isLoading = true;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (PageNumber < 1)
         {
             PageNumber = 1;
         }
-    }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        if (PageNumber < 1)
-        {
-            PageNumber = 1;
-        }
-        
         await LoadPageAsync();
     }
 
