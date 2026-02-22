@@ -33,11 +33,10 @@ Adjust the `Server` value to match your SQL Server instance name if different.
 
 ### 3. Apply Database Migrations
 
-Navigate to the WebApp project directory and run:
+Open the Package Manager Console, select the AcmeCorpDraw.WebApp as the as the default project and run:
 
 ```bash
-cd AcmeCorpDraw.WebApp
-dotnet ef database update
+update-database
 ```
 
 This will create the database and seed 100 valid serial numbers in the format `ACME-XXXX-XXXX-XXXX`.
