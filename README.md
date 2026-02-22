@@ -6,7 +6,7 @@ A Blazor Server web application for managing prize draw submissions with serial 
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (or SQL Server)
-- Visual Studio 2022 or later (recommended) or VS Code
+- Visual Studio 2026
 
 ## Getting Started
 
@@ -71,9 +71,11 @@ Open your browser and navigate to the URL displayed in the console.
 
 ### API Endpoints
 - `GET /api/submissions` - Get all submissions
+- `GET /api/submissions/page/{pageNumber}` - Get paginated submissions (10 per page)
+- `GET /api/submissions/count` - Get total submission count
 - `GET /api/submissions/{id}` - Get submission by ID
 - `POST /api/submissions` - Create new submission
-- `GET /api/submissions/count/{serialNumber}` - Get entry count for serial number
+- `GET /api/submissions/count/{serialNumber}` - Get entry count for specific serial number
 
 ## Sample Serial Numbers
 
